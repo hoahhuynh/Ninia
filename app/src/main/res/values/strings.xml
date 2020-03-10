@@ -12,4 +12,56 @@
     <string name="start">Start</string>
     <string name="create">Create</string>
     <string name="find_a_route">Find a Route</string>
+    <string name="gender">Gender</string>
+    <string name="height">Height</string>
+    <string name="weight">Weight</string>
+    <string name="age">Age</string>
+    <string name="inches_hint">9</string>
+    <string name="feet_hint">5</string>
+    <string name="feet">ft</string>
+    <string name="inches">in</string>
+    <string name="pounds">lbs</string>
+    <string name="person">person.svg</string>
+    <string name="weight_hint">100</string>
+    <string name="age_hint">18</string>
+    <string-array name="gender_values">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+    <string-array name="feet_values">
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+    <string-array name="inches_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+    </string-array>
+    <string-array name="age_values">
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+        <item>22</item>
+        <item>23</item>
+        <item>24</item>
+        <item>25</item>
+        <item>26</item>
+        <item>27</item>
+        <item>28</item>
+        <item>29</item>
+        <item>30</item>
+    </string-array>
 </resources>
