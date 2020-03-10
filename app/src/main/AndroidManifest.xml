@@ -24,7 +24,7 @@
             android:label="@string/title_activity_map" />
         <activity android:name=".ProfileActivity"/>
         <activity android:name=".WeatherActivity" />
-        <activity android:name=".ViewRouteActivity" />
+        <activity android:name=".ViewRouteActivity"/>
         <activity android:name=".BrowseRoutesActivity" />
         <activity android:name=".RunningActivity" />
         <activity android:name=".PlotRouteActivity" />
