@@ -30,6 +30,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -71,7 +73,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback{
 
     String msg;
     double latitude, longitude;
@@ -85,9 +87,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
     private MaterialSearchBar searchBar;
-    private Marker mCurrLocationMarker;
+    //private Marker mCurrLocationMarker;
     private View v;
     private Button btn_route;
+    private MarkerOptions place1, place2;
+    private Polyline currentPolyline;
     private final float DEFAULT_ZOOM = 18;
 
     @Override
@@ -97,6 +101,13 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
         searchBar = (MaterialSearchBar)findViewById(R.id.searchBar);
         btn_route = (Button)findViewById(R.id.btn_route);
 
+        btn_route.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new FetchURL(MapActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "driving"), "driving");
+            }
+        });
+
         /*if (!CheckGooglePlayServices()) {
             Log.i("onCreate", "Finishing test case since Google Play Services are not available");
             finish();
@@ -104,6 +115,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
         else {
             Log.i("onCreate","Google Play Services available.");
         }*/
+        //place1 = new MarkerOptions().position(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())).title("Location 1");
+        //map.addMarker(place1);
+        //place2= new MarkerOptions().position(new LatLng(33.929690, -84.519900)).title("Location 2");
+        //map.addMarker(place2);
 
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -338,6 +353,29 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
                         }
                     }
                 });
+    }
+
+    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+        // Origin of route
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
+        // Destination of route
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
+        // Mode
+        String mode = "mode=" + directionMode;
+        // Building the parameters to the web service
+        String parameters = str_origin + "&" + str_dest + "&" + mode;
+        // Output format
+        String output = "json";
+        // Building the url to the web service
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + "AIzaSyB0z6ZwZWxlMcg-r1KdZ3NIrqVLnvCrkH0";
+        return url;
+    }
+
+    @Override
+    public void onTaskDone(Object... values) {
+        if (currentPolyline != null)
+            currentPolyline.remove();
+        currentPolyline = map.addPolyline((PolylineOptions) values[0]);
     }
 
     /*private boolean CheckGooglePlayServices() {
