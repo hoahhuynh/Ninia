@@ -22,14 +22,15 @@
         <activity android:name=".WeatherActivity" android:parentActivityName=".HomeActivity"/>
         <activity android:name=".ViewRouteActivity" android:parentActivityName=".HomeActivity"/>
         <activity android:name=".BrowseRoutesActivity" android:parentActivityName=".HomeActivity" />
-        <activity android:name=".RunningActivity" android:parentActivityName=".HomeActivity"/>
-        <activity android:name=".PlotRouteActivity" android:parentActivityName=".HomeActivity"/>
-        <activity android:name=".HomeActivity">
+        <activity android:name=".RunningActivity" android:parentActivityName=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
 
             </intent-filter>
+        </activity>
+        <activity android:name=".PlotRouteActivity" android:parentActivityName=".HomeActivity"/>
+        <activity android:name=".HomeActivity">
         </activity>
     </application>
 
