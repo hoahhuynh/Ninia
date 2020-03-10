@@ -73,11 +73,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback{
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
     String msg;
     double latitude, longitude;
-    //GoogleApiClient mGoogleApiClient;
+    GoogleApiClient mGoogleApiClient;
     private int PROXIMITY_RADIUS = 10000;
     private GoogleMap map;
     private FusedLocationProviderClient fused;
@@ -87,7 +87,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private LocationCallback locationCallback;
     private LocationRequest locationRequest;
     private MaterialSearchBar searchBar;
-    //private Marker mCurrLocationMarker;
+    private Marker mCurrLocationMarker;
     private View v;
     private Button btn_route;
     private MarkerOptions place1, place2;
@@ -101,12 +101,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         searchBar = (MaterialSearchBar)findViewById(R.id.searchBar);
         btn_route = (Button)findViewById(R.id.btn_route);
 
-        btn_route.setOnClickListener(new View.OnClickListener() {
+        /*btn_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new FetchURL(MapActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "driving"), "driving");
             }
-        });
+        });*/
 
         /*if (!CheckGooglePlayServices()) {
             Log.i("onCreate", "Finishing test case since Google Play Services are not available");
@@ -355,7 +355,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 });
     }
 
-    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+    /*private String getUrl(LatLng origin, LatLng dest, String directionMode) {
         // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         // Destination of route
@@ -376,7 +376,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         if (currentPolyline != null)
             currentPolyline.remove();
         currentPolyline = map.addPolyline((PolylineOptions) values[0]);
-    }
+    }*/
 
     /*private boolean CheckGooglePlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
