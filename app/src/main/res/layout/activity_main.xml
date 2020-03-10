@@ -7,14 +7,6 @@
     tools:context=".HomeActivity"
     >
 
-    <Button
-        android:id="@+id/menuButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/menu"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/steps"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:layout_weight="1"
                 android:textColor="#010203"/>
 
@@ -41,7 +33,7 @@
                 android:id="@+id/totalSteps"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:text="0"
                 android:textColor="#010203"/>
         </LinearLayout>
@@ -57,14 +49,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/distance"
                 android:layout_weight="1"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:textColor="#010203"/>
 
             <TextView
                 android:id="@+id/totalDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:text="0.0 Mi"
                 android:textColor="#010203"/>
         </LinearLayout>
@@ -80,14 +72,14 @@
                 android:layout_height="wrap_content"
                 android:text="@string/calories"
                 android:layout_weight="1"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:textColor="#010203"/>
 
             <TextView
                 android:id="@+id/totalCalories"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="30dp"
+                android:textSize="30sp"
                 android:textColor="#010203"
                 android:text="0"/>
         </LinearLayout>
@@ -97,43 +89,44 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="100dp"
+        android:layout_marginBottom="57dp"
         android:orientation="vertical"
         android:padding="20dp">
+
         <Button
             android:id="@+id/walkingButton"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:layout_marginBottom="24dp"
-            android:backgroundTint="#7705FA05"
-            android:text="@string/walking"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="24sp"
+            android:background="#CFFF6A"
+            android:text="@string/walking" />
 
         <Button
             android:id="@+id/cyclingButton"
             android:layout_width="300dp"
             android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
-            android:backgroundTint="#7705FA05"
-            android:text="@string/cycling"
-            android:layout_gravity="center_horizontal"/>
+            android:background="#CFFF6A"
+            android:text="@string/cycling" />
 
         <Button
             android:id="@+id/hikingButton"
             android:layout_width="300dp"
             android:layout_height="60dp"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="24dp"
-            android:backgroundTint="#7705FA05"
-            android:text="@string/hiking"
-            android:layout_gravity="center_horizontal"/>
+            android:background="#CFFF6A"
+            android:text="@string/hiking" />
 
         <Button
             android:id="@+id/weatherButton"
             android:layout_width="300dp"
             android:layout_height="60dp"
-            android:backgroundTint="#7705FA05"
-            android:text="@string/weather"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:background="#CFFF6A"
+            android:text="@string/weather" />
 
     </LinearLayout>
 </RelativeLayout>
