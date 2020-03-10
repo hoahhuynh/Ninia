@@ -24,6 +24,7 @@
     <string name="person">person.svg</string>
     <string name="weight_hint">100</string>
     <string name="age_hint">18</string>
+    <string name="title_activity_map">MapActivity</string>
     <string-array name="gender_values">
         <item>Male</item>
         <item>Female</item>
