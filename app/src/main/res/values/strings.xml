@@ -3,10 +3,10 @@
     <string name="steps">Steps</string>
     <string name="distance">Distance</string>
     <string name="calories">Calories</string>
-    <string name="walking">Walking</string>
-    <string name="cycling">Cycling</string>
-    <string name="weather">Weather</string>
-    <string name="hiking">Hiking</string>
+    <string name="walking">W a l k i n g</string>
+    <string name="cycling">C y c l i n g</string>
+    <string name="weather">W e a t h e r</string>
+    <string name="hiking">H i k i n g</string>
     <string name="menu">Menu</string>
     <string name="temperature">Temperature</string>
     <string name="start">Start</string>
@@ -24,6 +24,7 @@
     <string name="person">person.svg</string>
     <string name="weight_hint">100</string>
     <string name="age_hint">18</string>
+    <string name="title_activity_map">MapActivity</string>
     <string-array name="gender_values">
         <item>Male</item>
         <item>Female</item>
