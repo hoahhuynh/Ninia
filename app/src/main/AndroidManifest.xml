@@ -9,7 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".WeatherActivity"></activity>
+        <activity android:name=".ViewRouteActivity" />
+        <activity android:name=".BrowseRoutesActivity" />
+        <activity android:name=".RunningActivity" />
+        <activity android:name=".PlotRouteActivity" />
+        <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
