@@ -24,9 +24,12 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.util.Map;
+
 public class HomeActivity extends AppCompatActivity {
 
     Button walkingBtn, hikingBtn, cyclingBtn, weatherBtn;
+    Intent intent1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,28 +42,50 @@ public class HomeActivity extends AppCompatActivity {
         weatherBtn = (Button)findViewById(R.id.weatherButton);
 
         /*if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            startActivity(new Intent(HomeActivity.this, HomeActivity.class));
             finish();
             return;
-        }
+        }*/
 
         walkingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                permissionChecking();
+                if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    intent1 = new Intent(HomeActivity.this, MapActivity.class);
+                    intent1.putExtra("msg", "park");
+                    startActivity(intent1);
+                }
+                else {
+                    permissionChecking();
+                }
             }
         });
 
         hikingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                permissionChecking();
+                if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    intent1 = new Intent(HomeActivity.this, MapActivity.class);
+                    intent1.putExtra("msg", "trail");
+                    startActivity(intent1);
+                }
+                else {
+                    permissionChecking();
+                }
             }
         });
 
         cyclingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                permissionChecking();
+                if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                    intent1 = new Intent(HomeActivity.this, MapActivity.class);
+                    intent1.putExtra("msg", "cycling park");
+                    startActivity(intent1);
+                }
+                else {
+                    permissionChecking();
+                }
             }
         });
     }
@@ -81,7 +106,7 @@ public class HomeActivity extends AppCompatActivity {
                             AlertDialog.Builder denialAlert = new AlertDialog.Builder(HomeActivity.this);
                             denialAlert.setTitle("Permission is Permanently Denied")
                                     .setMessage("Permission to access device location is permanently denied. Go to Settings to allow the permission.")
-                                    .setNegativeButton("Cancle", null)
+                                    .setNegativeButton("Cancel", null)
                                     .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialog, int which) {
@@ -100,6 +125,6 @@ public class HomeActivity extends AppCompatActivity {
                         token.continuePermissionRequest();
                     }
                 })
-                .check();*/
+                .check();
     }
 }

@@ -1,15 +1,21 @@
 package android.ninia;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.IntentSender;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -20,7 +26,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,6 +53,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.os.Handler;
 import android.text.Editable;
@@ -59,17 +71,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback{
 
+    String msg;
+    double latitude, longitude;
+    //GoogleApiClient mGoogleApiClient;
+    private int PROXIMITY_RADIUS = 10000;
     private GoogleMap map;
     private FusedLocationProviderClient fused;
     private PlacesClient placesClient;
     private List<AutocompletePrediction> predictionList;
     private Location lastLocation;
     private LocationCallback locationCallback;
+    private LocationRequest locationRequest;
     private MaterialSearchBar searchBar;
+    private Marker mCurrLocationMarker;
     private View v;
-    private Button btn_park;
+    private Button btn_route;
     private final float DEFAULT_ZOOM = 18;
 
     @Override
@@ -77,7 +95,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         searchBar = (MaterialSearchBar)findViewById(R.id.searchBar);
-        btn_park = (Button)findViewById(R.id.btn_park);
+        btn_route = (Button)findViewById(R.id.btn_route);
+
+        /*if (!CheckGooglePlayServices()) {
+            Log.i("onCreate", "Finishing test case since Google Play Services are not available");
+            finish();
+        }
+        else {
+            Log.i("onCreate","Google Play Services available.");
+        }*/
 
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -213,6 +239,16 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map = googleMap;
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
+        /*Intent intent = new Intent();
+        msg = intent.getStringExtra("msg");
+        map.clear();
+        String url = getUrl(latitude, longitude, msg);
+        Object[] DataTransfer = new Object[2];
+        DataTransfer[0] = map;
+        DataTransfer[1] = url;
+        Log.d("onClick", url);
+        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
+        getNearbyPlacesData.execute(DataTransfer);*/
 
         if(v != null && v.findViewById(Integer.parseInt("1")) != null) {
             View locationButton = ((View) v.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
@@ -254,6 +290,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
     }
+
     //did the user accept the request to turn on location?
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -302,4 +339,87 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     }
                 });
     }
+
+    /*private boolean CheckGooglePlayServices() {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(this);
+        if(result != ConnectionResult.SUCCESS) {
+            if(googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(this, result,
+                        0).show();
+            }
+            return false;
+        }
+        return true;
+    }*/
+
+    /*private String getUrl(double latitude, double longitude, String nearbyPlace) {
+
+        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlacesUrl.append("location=" + latitude + "," + longitude);
+        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
+        googlePlacesUrl.append("&type=" + nearbyPlace);
+        googlePlacesUrl.append("&sensor=true");
+        //googlePlacesUrl.append("&key=" + "AIzaSyB0z6ZwZWxlMcg-r1KdZ3NIrqVLnvCrkH0");
+        Log.d("getUrl", googlePlacesUrl.toString());
+        return (googlePlacesUrl.toString());
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.d("onLocationChanged", "entered");
+
+        lastLocation = location;
+        if (mCurrLocationMarker != null) {
+            mCurrLocationMarker.remove();
+        }
+
+        //Place current location marker
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latLng);
+        markerOptions.title("Current Position");
+        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        mCurrLocationMarker = map.addMarker(markerOptions);
+
+        //move map camera
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        map.animateCamera(CameraUpdateFactory.zoomTo(11));
+        Toast.makeText(MapActivity.this,"Your Current Location", Toast.LENGTH_LONG).show();
+
+        Log.d("onLocationChanged", String.format("latitude:%.3f longitude:%.3f",latitude,longitude));
+
+        //stop location updates
+        if (mGoogleApiClient != null) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, (LocationListener) this);
+            Log.d("onLocationChanged", "Removing Location Updates");
+        }
+        Log.d("onLocationChanged", "Exit");
+
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(1000);
+        locationRequest.setFastestInterval(1000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
+        }
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }*/
 }
