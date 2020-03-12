@@ -7,14 +7,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
@@ -29,7 +32,11 @@ import java.util.Map;
 public class HomeActivity extends AppCompatActivity {
 
     private Button walkingBtn, hikingBtn, cyclingBtn, weatherBtn;
+    TextView steps, dist, cal;
+    String gender, feet, inches, weight, age;
     private Intent intent1;
+    SharedPreferences preferences;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +47,16 @@ public class HomeActivity extends AppCompatActivity {
         hikingBtn = (Button)findViewById(R.id.hikingButton);
         cyclingBtn = (Button)findViewById(R.id.cyclingButton);
         weatherBtn = (Button)findViewById(R.id.weatherButton);
+        preferences = getSharedPreferences("com.android.ninia", Context.MODE_PRIVATE);
+        steps = (TextView)findViewById(R.id.totalSteps);
+        dist = (TextView)findViewById(R.id.totalDistance);
+        cal = (TextView)findViewById(R.id.totalCalories);
+
+        gender = preferences.getString("Gender", "Male");
+        feet = preferences.getString("Feet", "5");
+        inches = preferences.getString("Inches", "9");
+        weight = preferences.getString("Weight", "180");
+        age = preferences.getString("Age", "18");
 
         intent1 = new Intent(HomeActivity.this, PlotRouteActivity.class);
 

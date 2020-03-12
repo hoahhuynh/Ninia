@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Switch;
 
@@ -20,6 +21,8 @@ public class ProfileActivity extends AppCompatActivity {
     Spinner genderSpin, ftSpin, inSpin, ageSpin;
     SharedPreferences preferences;
     SharedPreferences.Editor prefEditor;
+    Button saveBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +34,14 @@ public class ProfileActivity extends AppCompatActivity {
         ftSpin = (Spinner)findViewById(R.id.feetSPNR);
         inSpin = (Spinner)findViewById(R.id.inchesSpinner);
         ageSpin = (Spinner)findViewById(R.id.ageSPNR);
+        saveBtn = findViewById(R.id.profileSaveBtn);
+
+        preferences.getString("Gender", "Male");
+        preferences.getString("Feet", "4");
+        preferences.getString("Inches", "0");
+        preferences.getString("Weight", "100");
+        preferences.getString("Age", "18");
+
 
         ArrayAdapter<CharSequence> genderAdapter = ArrayAdapter.createFromResource(this,R.array.gender_values, android.R.layout.simple_spinner_item);
         ArrayAdapter<CharSequence> feetAdapter = ArrayAdapter.createFromResource(this,R.array.feet_values, android.R.layout.simple_spinner_item);
@@ -55,7 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
+                
             }
         });
 
@@ -95,18 +106,18 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-        prefEditor.putString("Gender", gender);
-        prefEditor.putString("Feet", ft);
-        prefEditor.putString("Inches", inches);
-        prefEditor.putString("Weight", weight);
-        prefEditor.putString("Age", age);
-        prefEditor.apply();
-
-        preferences.getString("Gender", "Male");
-        preferences.getString("Feet", "4");
-        preferences.getString("Inches", "0");
-        preferences.getString("Weight", "100");
-        preferences.getString("Age", "18");
+        saveBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prefEditor.putString("Gender", gender);
+                prefEditor.putString("Feet", ft);
+                prefEditor.putString("Inches", inches);
+                prefEditor.putString("Weight", weight);
+                prefEditor.putString("Age", age);
+                prefEditor.commit();
+                prefEditor.apply();
+            }
+        });
 
 
     }
