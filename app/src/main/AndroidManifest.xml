@@ -3,6 +3,8 @@
     package="android.ninia">
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -14,23 +16,24 @@
 
         <meta-data android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB0z6ZwZWxlMcg-r1KdZ3NIrqVLnvCrkH0"/>
+        <meta-data android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map" />
-        <activity android:name=".ProfileActivity"/>
-        <activity android:name=".WeatherActivity" android:parentActivityName=".HomeActivity"/>
-        <activity android:name=".ViewRouteActivity" android:parentActivityName=".HomeActivity"/>
+        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".WeatherActivity" android:parentActivityName=".HomeActivity"></activity>
+        <activity android:name=".ViewRouteActivity" android:parentActivityName=".HomeActivity"></activity>
         <activity android:name=".BrowseRoutesActivity" android:parentActivityName=".HomeActivity" />
-        <activity android:name=".RunningActivity" android:parentActivityName=".HomeActivity">
+        <activity android:name=".RunningActivity" android:parentActivityName=".HomeActivity"></activity>
+        <activity android:name=".PlotRouteActivity" android:parentActivityName=".HomeActivity"></activity>
+        <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
 
             </intent-filter>
-        </activity>
-        <activity android:name=".PlotRouteActivity" android:parentActivityName=".HomeActivity"/>
-        <activity android:name=".HomeActivity">
         </activity>
     </application>
 
