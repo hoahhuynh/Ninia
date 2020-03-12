@@ -8,8 +8,8 @@
 
     <TableLayout
         android:id="@+id/tableLayout"
-        android:layout_width="348dp"
-        android:layout_height="115dp"
+        android:layout_width="347dp"
+        android:layout_height="78dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.555"
@@ -64,14 +64,14 @@
     </TableLayout>
 
     <Button
-        android:id="@+id/startBTN3"
+        android:id="@+id/runningPauseBtn"
         android:layout_width="324dp"
         android:layout_height="52dp"
         android:layout_gravity="center_horizontal"
         android:background="#CFFF6A"
         android:text="Pause"
         android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/startBTN2"
+        app:layout_constraintBottom_toTopOf="@+id/runningStopBtn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,12 +79,12 @@
         app:layout_constraintVertical_bias="0.903" />
 
     <Button
-        android:id="@+id/startBTN2"
+        android:id="@+id/runningStopBtn"
         android:layout_width="328dp"
         android:layout_height="53dp"
         android:layout_gravity="center_horizontal"
         android:background="#CFFF6A"
-        android:text="Cancel"
+        android:text="Stop"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout2"
         app:layout_constraintEnd_toEndOf="parent"

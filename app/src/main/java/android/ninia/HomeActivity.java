@@ -28,8 +28,8 @@ import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
 
-    Button walkingBtn, hikingBtn, cyclingBtn, weatherBtn;
-    Intent intent1;
+    private Button walkingBtn, hikingBtn, cyclingBtn, weatherBtn;
+    private Intent intent1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +41,8 @@ public class HomeActivity extends AppCompatActivity {
         cyclingBtn = (Button)findViewById(R.id.cyclingButton);
         weatherBtn = (Button)findViewById(R.id.weatherButton);
 
+        intent1 = new Intent(HomeActivity.this, PlotRouteActivity.class);
+
         /*if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startActivity(new Intent(HomeActivity.this, HomeActivity.class));
             finish();
@@ -51,8 +53,10 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    intent1 = new Intent(HomeActivity.this, MapActivity.class);
+                    /*intent1 = new Intent(HomeActivity.this, MapActivity.class);
                     intent1.putExtra("msg", "park");
+                    startActivity(intent1);*/
+
                     startActivity(intent1);
                 }
                 else {
@@ -65,8 +69,10 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    intent1 = new Intent(HomeActivity.this, MapActivity.class);
+                    /*intent1 = new Intent(HomeActivity.this, MapActivity.class);
                     intent1.putExtra("msg", "trail");
+                    startActivity(intent1);*/
+
                     startActivity(intent1);
                 }
                 else {
@@ -79,13 +85,23 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                    intent1 = new Intent(HomeActivity.this, MapActivity.class);
+                    /*intent1 = new Intent(HomeActivity.this, MapActivity.class);
                     intent1.putExtra("msg", "cycling park");
+                    startActivity(intent1);*/
+
                     startActivity(intent1);
                 }
                 else {
                     permissionChecking();
                 }
+            }
+        });
+
+        weatherBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                intent1 = new Intent(HomeActivity.this,WeatherActivity.class);
+                startActivity(intent1);
             }
         });
     }

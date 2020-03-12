@@ -24,9 +24,9 @@
             android:label="@string/title_activity_map" />
         <activity android:name=".ProfileActivity"></activity>
         <activity android:name=".WeatherActivity" android:parentActivityName=".HomeActivity"></activity>
-        <activity android:name=".ViewRouteActivity" android:parentActivityName=".HomeActivity"></activity>
+        <activity android:name=".ViewRouteActivity" android:parentActivityName=".PlotRouteActivity"></activity>
         <activity android:name=".BrowseRoutesActivity" android:parentActivityName=".HomeActivity" />
-        <activity android:name=".RunningActivity" android:parentActivityName=".HomeActivity"></activity>
+        <activity android:name=".RunningActivity"/>
         <activity android:name=".PlotRouteActivity" android:parentActivityName=".HomeActivity"></activity>
         <activity android:name=".HomeActivity">
             <intent-filter>
