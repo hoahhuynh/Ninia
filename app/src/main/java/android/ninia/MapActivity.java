@@ -2,9 +2,12 @@ package android.ninia;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 
@@ -69,15 +72,17 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback {
 
     String msg;
+    private LatLng p1;
     double latitude, longitude;
-    GoogleApiClient mGoogleApiClient;
+    //GoogleApiClient mGoogleApiClient;
     private int PROXIMITY_RADIUS = 10000;
     private GoogleMap map;
     private FusedLocationProviderClient fused;
@@ -85,9 +90,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     private List<AutocompletePrediction> predictionList;
     private Location lastLocation;
     private LocationCallback locationCallback;
-    private LocationRequest locationRequest;
+    //private LocationRequest locationRequest;
     private MaterialSearchBar searchBar;
-    private Marker mCurrLocationMarker;
+    //private Marker mCurrLocationMarker;
     private View v;
     private Button btn_route;
     private MarkerOptions place1, place2;
@@ -101,12 +106,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         searchBar = (MaterialSearchBar)findViewById(R.id.searchBar);
         btn_route = (Button)findViewById(R.id.btn_route);
 
-        /*btn_route.setOnClickListener(new View.OnClickListener() {
+        btn_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new FetchURL(MapActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "driving"), "driving");
             }
-        });*/
+        });
 
         /*if (!CheckGooglePlayServices()) {
             Log.i("onCreate", "Finishing test case since Google Play Services are not available");
@@ -115,10 +120,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         else {
             Log.i("onCreate","Google Play Services available.");
         }*/
-        //place1 = new MarkerOptions().position(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude())).title("Location 1");
-        //map.addMarker(place1);
-        //place2= new MarkerOptions().position(new LatLng(33.929690, -84.519900)).title("Location 2");
-        //map.addMarker(place2);
 
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -240,6 +241,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                         }
                     }
                 });
+                getLocationFromAddress(getApplicationContext(), suggestion);
+                place2 = new MarkerOptions().position(p1).title("Location 2");
+                map.addMarker(place2);
             }
 
             @Override
@@ -328,6 +332,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                             lastLocation = task.getResult();
                             if (lastLocation != null) {
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), DEFAULT_ZOOM));
+                                latitude = lastLocation.getLatitude();
+                                longitude = lastLocation.getLongitude();
+
+                                place1 = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location 1");
+                                map.addMarker(place1);
                             } else {
                                 final LocationRequest locationRequest = LocationRequest.create();
                                 locationRequest.setInterval(10000);
@@ -355,7 +364,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
                 });
     }
 
-    /*private String getUrl(LatLng origin, LatLng dest, String directionMode) {
+    private String getUrl(LatLng origin, LatLng dest, String directionMode) {
         // Origin of route
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         // Destination of route
@@ -376,7 +385,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
         if (currentPolyline != null)
             currentPolyline.remove();
         currentPolyline = map.addPolyline((PolylineOptions) values[0]);
-    }*/
+    }
 
     /*private boolean CheckGooglePlayServices() {
         GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
@@ -460,4 +469,21 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }*/
+    public void getLocationFromAddress(Context context, String strAddress) {
+        Geocoder coder = new Geocoder(context);
+        List<Address> address;
+        p1 = null;
+
+        try {
+            // May throw an IOException
+            address = coder.getFromLocationName(strAddress, 5);
+
+            Address location = address.get(0);
+            p1 = new LatLng(location.getLatitude(), location.getLongitude() );
+
+        } catch (IOException ex) {
+
+            ex.printStackTrace();
+        }
+    }
 }
