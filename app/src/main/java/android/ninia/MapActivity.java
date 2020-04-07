@@ -94,7 +94,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     private MaterialSearchBar searchBar;
     //private Marker mCurrLocationMarker;
     private View v;
-    private Button btn_route;
+    private Button btn_route, btn_create;
     private MarkerOptions place1, place2;
     private Polyline currentPolyline;
     private final float DEFAULT_ZOOM = 18;
@@ -105,14 +105,25 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         setContentView(R.layout.activity_map);
         searchBar = (MaterialSearchBar)findViewById(R.id.searchBar);
         btn_route = (Button)findViewById(R.id.btn_route);
+        btn_create = (Button)findViewById(R.id.btn_startRoute);
+        //btn_create.setVisibility(View.GONE);
 
         btn_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 new FetchURL(MapActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "driving"), "driving");
+                //btn_create.setVisibility(View.VISIBLE);
+                //btn_route.setVisibility(View.GONE);
             }
         });
 
+        btn_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MapActivity.this, RunningActivity.class);
+                startActivity(intent);
+            }
+        });
         /*if (!CheckGooglePlayServices()) {
             Log.i("onCreate", "Finishing test case since Google Play Services are not available");
             finish();
@@ -241,6 +252,8 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                         }
                     }
                 });
+                //btn_route.setVisibility(View.VISIBLE);
+                //btn_create.setVisibility(View.GONE);
                 getLocationFromAddress(getApplicationContext(), suggestion);
                 place2 = new MarkerOptions().position(p1).title("Location 2");
                 map.addMarker(place2);
