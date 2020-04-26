@@ -2,6 +2,7 @@ package android.ninia;
 
 //TESTING GITHUB
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -13,6 +14,9 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -27,6 +31,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity {
+
 
     private Button walkingBtn, hikingBtn, cyclingBtn, weatherBtn;
     private Intent intent1;
@@ -142,5 +147,24 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 })
                 .check();
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater main_menu = getMenuInflater();
+        main_menu.inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        super.onOptionsItemSelected(item);
+
+        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+        startActivity(intent);
+        return true;
     }
 }

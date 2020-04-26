@@ -6,29 +6,49 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Chronometer;
+import android.widget.TextView;
 
 public class RunningActivity extends AppCompatActivity {
 
-    private Button pauseBtn, cancelBtn;
+    Button pauseBtn, cancelBtn;
+    Chronometer chronometer;
+    long pauseOffset = 0;
+    boolean isRunning = false;
+    TextView caloriesBurned;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_running);
 
-        pauseBtn = findViewById(R.id.runningPauseBtn);
-        cancelBtn = findViewById(R.id.runningStopBtn);
+        chronometer = (Chronometer)findViewById(R.id.chronometer);
+        pauseBtn = (Button)findViewById(R.id.runningPauseBtn);
+        cancelBtn = (Button)findViewById(R.id.runningStopBtn);
+        caloriesBurned = (TextView)findViewById(R.id.approxCalTextView);
+
+        chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+        chronometer.start();
+
         pauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(pauseBtn.getText().equals("START"))
+                if(pauseBtn.getText().equals("START") && !isRunning)
                 {
                     pauseBtn.setText("PAUSE");
+                    chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+                    chronometer.start();
+                    isRunning = true;
                 }else
                 {
                     pauseBtn.setText("START");
+                    chronometer.stop();
+                    pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+                    isRunning = false;
                 }
             }
         });
@@ -36,9 +56,26 @@ public class RunningActivity extends AppCompatActivity {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //confirmCancel();
+                chronometer.stop();
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                pauseOffset = 0;
+
+                confirmCancel();
                 Intent intent = new Intent(RunningActivity.this, HomeActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        caloriesBurned.setText(String.format("%.2f",Double.parseDouble(caloriesBurned.getText().toString())+ 0.06));
+        chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            @Override
+            public void onChronometerTick(Chronometer chronometer) {
+
+                if(SystemClock.elapsedRealtime() - chronometer.getBase() >= 5000)
+                {
+                    caloriesBurned.setText(String.format("%.2f",Double.parseDouble(caloriesBurned.getText().toString())+ 0.06));
+                }
+
             }
         });
     }
