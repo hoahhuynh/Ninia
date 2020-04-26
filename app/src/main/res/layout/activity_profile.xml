@@ -20,6 +20,7 @@
         android:contentDescription="@string/person"/>
 
     <TableLayout
+        android:id="@+id/tableLayout3"
         android:layout_width="339dp"
         android:layout_height="326dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -108,8 +109,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="20dp"
                 android:layout_marginRight="20dp"
-                android:ems="10"
                 android:autofillHints="@string/weight_hint"
+                android:ems="10"
                 android:hint="@string/weight_hint"
                 android:inputType="numberDecimal"
                 android:textSize="12sp" />
@@ -142,5 +143,17 @@
 
         </TableRow>
     </TableLayout>
+
+    <Button
+        android:id="@+id/profSaveBTN"
+        android:layout_width="343dp"
+        android:layout_height="49dp"
+        android:text="Save"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tableLayout3"
+        app:layout_constraintVertical_bias="0.137" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

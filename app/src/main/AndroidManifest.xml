@@ -22,7 +22,8 @@
         <activity
             android:name=".MapActivity"
             android:label="@string/title_activity_map" />
-        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ProfileActivity">
+        </activity>
         <activity android:name=".WeatherActivity" android:parentActivityName=".HomeActivity"></activity>
         <activity android:name=".ViewRouteActivity" android:parentActivityName=".PlotRouteActivity"></activity>
         <activity android:name=".BrowseRoutesActivity" android:parentActivityName=".HomeActivity" />
@@ -32,7 +33,6 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
-
             </intent-filter>
         </activity>
     </application>

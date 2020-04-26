@@ -106,10 +106,26 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         searchBar = (MaterialSearchBar)findViewById(R.id.searchBar);
         btn_route = (Button)findViewById(R.id.btn_route);
 
+        btn_route.setVisibility(View.INVISIBLE);
         btn_route.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new FetchURL(MapActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "driving"), "driving");
+                if(btn_route.getText().toString().equalsIgnoreCase("Search") && place2.getPosition() != null)
+                {
+                    new FetchURL(MapActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "driving"), "driving");
+                    try {
+                        Thread.currentThread().sleep(10000);
+                        btn_route.setText("Start");
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+                else if(btn_route.getText().toString().equalsIgnoreCase("Start") && place2.getPosition() != null)
+                {
+                    Intent intent = new Intent(MapActivity.this,ViewRouteActivity.class);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -133,12 +149,12 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         searchBar.setOnSearchActionListener(new MaterialSearchBar.OnSearchActionListener() {
             @Override
             public void onSearchStateChanged(boolean enabled) {
-
             }
 
             @Override
             public void onSearchConfirmed(CharSequence text) {
                 startSearch(text.toString(),true,null,true);
+
             }
 
             @Override
@@ -156,7 +172,11 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         searchBar.addTextChangeListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                btn_route.setVisibility(View.VISIBLE);
+                if(btn_route.getText().toString().equalsIgnoreCase("Start"))
+                {
+                    btn_route.setText("Search");
+                }
             }
 
             @Override
@@ -248,7 +268,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
 
             @Override
             public void OnItemDeleteListener(int position, View v) {
-
             }
         });
     }
@@ -486,4 +505,5 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
             ex.printStackTrace();
         }
     }
+
 }

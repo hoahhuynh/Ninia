@@ -4,6 +4,10 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,6 +43,24 @@ public class FetchURL extends AsyncTask<String, Void, String> {
         super.onPostExecute(s);
         PointsParser parserTask = new PointsParser(mContext, directionMode);
         // Invokes the thread for parsing the JSON data
+
+
+        try {
+            JSONObject jsonObject = new JSONObject(s);
+            String routeInfo =jsonObject.getString("routes");
+
+            JSONArray jsonArray = new JSONArray(routeInfo);
+
+            Route route = new Route(
+                    jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("start_address"),
+                    jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getString("end_address"),
+                    jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("duration").getString("text"),
+                    jsonObject.getJSONArray("routes").getJSONObject(0).getJSONArray("legs").getJSONObject(0).getJSONObject("distance").getString("text")
+                    );
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         parserTask.execute(s);
     }
 
