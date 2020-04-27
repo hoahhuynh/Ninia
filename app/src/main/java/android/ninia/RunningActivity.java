@@ -19,6 +19,8 @@ public class RunningActivity extends AppCompatActivity {
     long pauseOffset = 0;
     boolean isRunning = false;
     TextView caloriesBurned;
+    TextView steps;
+    TextView distance;
 
 
     @Override
@@ -30,6 +32,8 @@ public class RunningActivity extends AppCompatActivity {
         pauseBtn = (Button)findViewById(R.id.runningPauseBtn);
         cancelBtn = (Button)findViewById(R.id.runningStopBtn);
         caloriesBurned = (TextView)findViewById(R.id.approxCalTextView);
+        steps = (TextView)findViewById(R.id.approxStepsTextView);
+        distance = (TextView)findViewById(R.id.approxDistTextView);
 
         chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
         chronometer.start();
@@ -74,6 +78,8 @@ public class RunningActivity extends AppCompatActivity {
                 if(SystemClock.elapsedRealtime() - chronometer.getBase() >= 5000)
                 {
                     caloriesBurned.setText(String.format("%.2f",Double.parseDouble(caloriesBurned.getText().toString())+ 0.06));
+                    steps.setText(String.valueOf(Integer.parseInt(steps.getText().toString()) + 1));
+                    //distance.setText(String.format("%.1f",String.valueOf(Double.parseDouble(distance.getText().toString()) + 0.01)));
                 }
 
             }

@@ -8,9 +8,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -19,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.karumi.dexter.Dexter;
@@ -30,11 +36,13 @@ import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.Map;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements SensorEventListener {
 
-
-    private Button walkingBtn, hikingBtn, cyclingBtn, weatherBtn;
-    private Intent intent1;
+    boolean run = false;
+    SensorManager sensorManager;
+    TextView steps;
+    Button walkingBtn, hikingBtn, cyclingBtn, weatherBtn;
+    Intent intent1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +53,9 @@ public class HomeActivity extends AppCompatActivity {
         hikingBtn = (Button)findViewById(R.id.hikingButton);
         cyclingBtn = (Button)findViewById(R.id.cyclingButton);
         weatherBtn = (Button)findViewById(R.id.weatherButton);
+
+        steps = findViewById(R.id.totalSteps);
+        sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 
         intent1 = new Intent(HomeActivity.this, PlotRouteActivity.class);
 
@@ -111,6 +122,29 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        run = true;
+        Sensor count = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+
+        if(count != null)
+        {
+            sensorManager.registerListener((SensorEventListener) this, count, SensorManager.SENSOR_DELAY_UI);
+        }else
+        {
+            Toast.makeText(this,"Did not find step sensor",Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        run = false;
+    }
+
     private void permissionChecking() {
         Dexter.withActivity(HomeActivity.this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -166,5 +200,18 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
         startActivity(intent);
         return true;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if(run)
+        {
+            steps.setText(String.valueOf(event.values[0]));
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
