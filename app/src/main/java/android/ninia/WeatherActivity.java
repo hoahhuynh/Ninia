@@ -9,7 +9,6 @@ import android.widget.TextView;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -33,7 +32,7 @@ public class WeatherActivity extends AppCompatActivity {
             InputStream is = connection.getInputStream();
             InputStreamReader reader = new InputStreamReader(is);
             BufferedReader bufferedReader = new BufferedReader(reader);
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             String string;
             while((string = bufferedReader.readLine()) != null)
                 sb.append(string);
