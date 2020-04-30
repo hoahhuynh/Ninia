@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -54,17 +55,26 @@ public class ProfileActivity extends AppCompatActivity {
         inSpin.setAdapter(inchesAdapter);
         ageSpin.setAdapter(ageAdapter);
 
-        genderSpin.setSelection(0);
+
+        weightEDT.setText(preferences.getString("Weight", "150"));
+        if(preferences.getString("Gender", "Male").equalsIgnoreCase("Male"))
+        {
+            genderSpin.setSelection(0);
+        }
+        else
+        {
+            genderSpin.setSelection(1);
+        }
         ftSpin.setSelection(Integer.parseInt(preferences.getString("Feet", "5")) - 3);
         inSpin.setSelection(Integer.parseInt(preferences.getString("Inches", "0")) % 11);
         ageSpin.setSelection(Integer.parseInt(preferences.getString("Age", "18")) % 18);
-        weightEDT.setText("180");
 
 
         genderSpin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 gender = parent.getItemAtPosition(position).toString();
+                prefEditor.putString("Gender", gender);
             }
 
             @Override
@@ -77,6 +87,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ft = parent.getItemAtPosition(position).toString();
+                prefEditor.putString("Feet", ft);
             }
 
             @Override
@@ -89,6 +100,7 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 inches = parent.getItemAtPosition(position).toString();
+                prefEditor.putString("Inches", inches);
             }
 
             @Override
@@ -101,6 +113,8 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 age = parent.getItemAtPosition(position).toString();
+                InputMethodManager imm = (InputMethodManager) getSystemService(ProfileActivity.INPUT_METHOD_SERVICE);
+                imm.toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
             }
 
             @Override
@@ -112,10 +126,7 @@ public class ProfileActivity extends AppCompatActivity {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                prefEditor.putString("Gender", gender);
-                prefEditor.putString("Feet", ft);
-                prefEditor.putString("Inches", inches);
-                prefEditor.putString("Weight", weight);
+                prefEditor.putString("Weight", weightEDT.getText().toString());
                 prefEditor.putString("Age", age);
                 prefEditor.apply();
                 prefEditor.commit();
