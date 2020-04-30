@@ -114,7 +114,9 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 {
                     new FetchURL(MapActivity.this).execute(getUrl(place1.getPosition(), place2.getPosition(), "driving"), "driving");
                     try {
+                        btn_route.setEnabled(false);
                         Thread.currentThread().sleep(10000);
+                        btn_route.setEnabled(true);
                         btn_route.setText("Start");
                     } catch (InterruptedException e) {
                         e.printStackTrace();

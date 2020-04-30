@@ -1,213 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RunningActivity">
 
-    <TableLayout
-        android:id="@+id/tableLayout"
-        android:layout_width="347dp"
-        android:layout_height="78dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.555"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.092">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="40dp"
+        android:layout_marginVertical="40dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="1dp">
 
-        <TableRow
+        <TextView
+            android:id="@+id/startTV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:text="@string/start"
+            android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/startTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/start"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/startLocationTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginRight="220dp"
-                android:text="Location"
-                android:textAlignment="textEnd"
-                android:textSize="20sp" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/startLocationTV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="10sp">
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/goalTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/goal"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/goalLocationTV"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="Location"
-                android:textAlignment="textEnd"
-                android:textSize="20sp" />
-        </TableRow>
-
-    </TableLayout>
-
-    <Button
-        android:id="@+id/runningPauseBtn"
-        android:layout_width="324dp"
-        android:layout_height="52dp"
-        android:layout_gravity="center_horizontal"
-        android:background="#CFFF6A"
-        android:text="Pause"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/runningStopBtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.494"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout"
-        app:layout_constraintVertical_bias="0.903" />
-
-    <Button
-        android:id="@+id/runningStopBtn"
-        android:layout_width="328dp"
-        android:layout_height="53dp"
-        android:layout_gravity="center_horizontal"
-        android:background="#CFFF6A"
-        android:text="Stop"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toTopOf="@+id/tableLayout2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.518"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout"
-        app:layout_constraintVertical_bias="0.9" />
-
-    <TableLayout
-        android:id="@+id/tableLayout2"
-        android:layout_width="349dp"
-        android:layout_height="176dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.517"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.940">
-
-        <TableRow
+        <TextView
+            android:id="@+id/goalTV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:text="@string/goal"
+            android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/approxSteps"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/steps"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/approxStepsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:layout_marginRight="180dp"
-                android:text="0"
-                android:textAlignment="textEnd"
-                android:textSize="20sp" />
-        </TableRow>
-
-        <TableRow
+        <TextView
+            android:id="@+id/goalLocationTV"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="10sp">
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/approxDist"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/distance"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/approxDistTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="0"
-                android:textAlignment="textEnd"
-                android:textSize="20sp" />
-        </TableRow>
-
-        <TableRow
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="10sp">
+            android:layout_height="120dp">
 
             <TextView
-                android:id="@+id/approxCal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/calories"
-                android:textSize="20sp" />
+                android:id="@+id/progressPercentage"
+                android:layout_width="150dp"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:text="0%"
+                android:textSize="60sp"
+                android:textAlignment="center"
+                />
 
-            <TextView
-                android:id="@+id/approxCalTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="0"
-                android:textAlignment="textEnd"
-                android:textSize="20sp" />
-        </TableRow>
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="bottom"/>
 
-        <TableRow
+
+        </FrameLayout>
+
+        <TableLayout
+            android:id="@+id/tableLayout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="10sp">
+            android:layout_height="180dp"
+            android:layout_marginVertical="30dp">
 
-            <TextView
-                android:id="@+id/runningTimeBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Time"
-                android:textSize="20sp" />
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <Chronometer
-                android:id="@+id/chronometer"
-                android:layout_gravity="end"
-                android:textSize="20sp"/>
-        </TableRow>
+                <TextView
+                    android:id="@+id/approxSteps"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/steps"
+                    android:textSize="20sp" />
 
-        <TableRow
+                <TextView
+                    android:id="@+id/approxStepsTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="0"
+                    android:textAlignment="textEnd"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10sp">
+
+                <TextView
+                    android:id="@+id/approxDist"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/distance"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/approxDistTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="0"
+                    android:textAlignment="textEnd"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10sp">
+
+                <TextView
+                    android:id="@+id/approxCal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/calories"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/approxCalTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="0"
+                    android:textAlignment="textEnd"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10sp">
+
+                <TextView
+                    android:id="@+id/runningTimeBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time"
+                    android:textSize="20sp" />
+
+                <Chronometer
+                    android:id="@+id/chronometer"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:textAlignment="textEnd"
+                    android:textSize="20sp" />
+            </TableRow>
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="10sp">
+
+                <TextView
+                    android:id="@+id/approxTemp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/temperature"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/approxTempTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="end"
+                    android:text="0"
+                    android:textAlignment="textEnd"
+                    android:textSize="20sp" />
+            </TableRow>
+        </TableLayout>
+
+        <Button
+            android:id="@+id/runningPauseBtn"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="10sp">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="#CFFF6A"
+            android:text="Pause"
+            android:textSize="30sp"
+            android:layout_marginTop="5dp"/>
 
-            <TextView
-                android:id="@+id/approxTemp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/temperature"
-                android:textSize="20sp" />
+        <Button
+            android:id="@+id/runningStopBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginVertical="10dp"
+            android:background="#CFFF6A"
+            android:text="Stop"
+            android:textSize="30sp" />
 
-            <TextView
-                android:id="@+id/approxTempTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="60"
-                android:textAlignment="textEnd"
-                android:textSize="20sp" />
-        </TableRow>
-    </TableLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -11,7 +11,13 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class RunningActivity extends AppCompatActivity {
 
@@ -22,7 +28,14 @@ public class RunningActivity extends AppCompatActivity {
     TextView caloriesBurned;
     TextView steps;
     TextView distance;
+    TextView currentLocation;
+    TextView goalLocation;
+    TextView percentage;
+    ProgressBar progress;
+    int maxDistance = 0;
+    int progPercentage = 0;
     int totalSteps = 0;
+    double totalDistance = 0;
     double totalCalories = 0;
     long timer = 0, extraTimer = 0;
 
@@ -31,14 +44,22 @@ public class RunningActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_running);
 
+        currentLocation = (TextView) findViewById(R.id.startLocationTV);
+        goalLocation = (TextView) findViewById(R.id.goalLocationTV);
         chronometer = (Chronometer)findViewById(R.id.chronometer);
         pauseBtn = (Button)findViewById(R.id.runningPauseBtn);
         cancelBtn = (Button)findViewById(R.id.runningStopBtn);
         caloriesBurned = (TextView)findViewById(R.id.approxCalTextView);
         steps = (TextView)findViewById(R.id.approxStepsTextView);
         distance = (TextView)findViewById(R.id.approxDistTextView);
+        progress = (ProgressBar)findViewById(R.id.progressBar);
+        percentage = (TextView)findViewById(R.id.progressPercentage);
         totalCalories = Double.parseDouble(caloriesBurned.getText().toString());
+        maxDistance = getDistance();
+        progress.setMax(100);
 
+        currentLocation.setText(Route.startLocation);
+        goalLocation.setText(Route.endLocation);
         chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
         chronometer.start();
 
@@ -80,11 +101,15 @@ public class RunningActivity extends AppCompatActivity {
 
                 if(timer - extraTimer >= 3000)
                 {
-                    totalSteps = (int)(Integer.parseInt(steps.getText().toString()) + 2.3);
-                    totalCalories = totalSteps * 0.06;
+                    totalSteps = (int)(Integer.parseInt(steps.getText().toString()) + 4.9);
+                    totalCalories = totalSteps * 0.09;
+                    totalDistance += 0.0024;
                     caloriesBurned.setText(String.valueOf((int)totalCalories));
                     steps.setText(String.valueOf(totalSteps));
-                    distance.setText(String.format("%.2f",Double.parseDouble(distance.getText().toString()) + 0.01));
+                    distance.setText(String.format("%.2f",totalDistance));
+                    progPercentage = (int) (Double.parseDouble(String.valueOf(distance.getText().toString())) / maxDistance * 1000);
+                    progress.setProgress(progPercentage);
+                    percentage.setText(progPercentage + "%");
                     extraTimer += 3000;
                 }
 
@@ -114,4 +139,18 @@ public class RunningActivity extends AppCompatActivity {
 
         stop.show();
     }
+
+    public int getDistance()
+    {
+        String digits = "";
+        Pattern pattern = Pattern.compile("\\d");
+        Matcher matcher = pattern.matcher(Route.distance);
+
+        while(matcher.find())
+        {
+            digits += matcher.group();
+        }
+        return Integer.valueOf(digits);
+    }
 }
+
