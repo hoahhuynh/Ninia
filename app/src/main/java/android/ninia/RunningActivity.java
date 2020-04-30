@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Chronometer;
@@ -21,6 +22,8 @@ public class RunningActivity extends AppCompatActivity {
     TextView caloriesBurned;
     TextView steps;
     TextView distance;
+    int totalSteps = 0;
+    double totalCalories = 0;
     long timer = 0, extraTimer = 0;
 
     @Override
@@ -34,7 +37,7 @@ public class RunningActivity extends AppCompatActivity {
         caloriesBurned = (TextView)findViewById(R.id.approxCalTextView);
         steps = (TextView)findViewById(R.id.approxStepsTextView);
         distance = (TextView)findViewById(R.id.approxDistTextView);
-        caloriesBurned.setText("0");
+        totalCalories = Double.parseDouble(caloriesBurned.getText().toString());
 
         chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
         chronometer.start();
@@ -66,12 +69,9 @@ public class RunningActivity extends AppCompatActivity {
                 pauseOffset = 0;
 
                 confirmCancel();
-                Intent intent = new Intent(RunningActivity.this, HomeActivity.class);
-                startActivity(intent);
             }
         });
 
-        caloriesBurned.setText(String.format("%.2f",Double.parseDouble(caloriesBurned.getText().toString())+ 0.06));
         chronometer.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
@@ -80,9 +80,10 @@ public class RunningActivity extends AppCompatActivity {
 
                 if(timer - extraTimer >= 3000)
                 {
-
-                    caloriesBurned.setText(String.format("%.2f",Double.parseDouble(caloriesBurned.getText().toString())+ 0.06));
-                    steps.setText(String.valueOf((int)Double.parseDouble(steps.getText().toString()) + 2));
+                    totalSteps = (int)(Integer.parseInt(steps.getText().toString()) + 2.3);
+                    totalCalories = totalSteps * 0.06;
+                    caloriesBurned.setText(String.valueOf((int)totalCalories));
+                    steps.setText(String.valueOf(totalSteps));
                     distance.setText(String.format("%.2f",Double.parseDouble(distance.getText().toString()) + 0.01));
                     extraTimer += 3000;
                 }
@@ -111,5 +112,6 @@ public class RunningActivity extends AppCompatActivity {
             }
         });
 
+        stop.show();
     }
 }

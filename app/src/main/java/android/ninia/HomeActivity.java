@@ -14,6 +14,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -38,15 +39,20 @@ import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
+import java.text.DecimalFormat;
 import java.util.Map;
 
 public class HomeActivity extends AppCompatActivity implements SensorEventListener {
 
     boolean run = false;
     SensorManager sensorManager;
-    TextView steps;
+    TextView steps, dist, cal;
+    double stepsTaken = 0;
     Button walkingBtn, hikingBtn, cyclingBtn, weatherBtn;
     Intent intent1;
+    DecimalFormat numberFormat = new DecimalFormat("#.0");
+    String gender, feet, inches, weight, age;
+    SharedPreferences preferences;
 
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -61,11 +67,20 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
         hikingBtn = (Button)findViewById(R.id.hikingButton);
         cyclingBtn = (Button)findViewById(R.id.cyclingButton);
         weatherBtn = (Button)findViewById(R.id.weatherButton);
-
-        steps = findViewById(R.id.totalSteps);
+        preferences = getSharedPreferences("com.android.nina", Context.MODE_PRIVATE);
+        steps = (TextView) findViewById(R.id.totalSteps);
+        dist = (TextView) findViewById(R.id.totalDistance);
+        cal = (TextView)findViewById(R.id.totalCalories);
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 
         intent1 = new Intent(HomeActivity.this, PlotRouteActivity.class);
+
+        gender = preferences.getString("Gender", "Male");
+        feet = preferences.getString("Feet", "5");
+        inches = preferences.getString("Inches", "9");
+        weight = preferences.getString("Weight", "180");
+        age = preferences.getString("Age", "18");
+
 
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
         navigationView = (NavigationView)findViewById(R.id.navigation);
@@ -90,12 +105,15 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
                         startActivity(intent);
                         break;
                     case R.id.walk:
+                        intent1.putExtra("mode", "walking");
                         startActivity(intent1);
                         break;
                     case R.id.bike:
+                        intent1.putExtra("mode", "bicycling");
                         startActivity(intent1);
                         break;
                     case R.id.hike:
+                        intent1.putExtra("mode", "hiking");
                         startActivity(intent1);
                         break;
                 }
@@ -254,6 +272,8 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
         if(run)
         {
             steps.setText(String.valueOf(event.values[0]));
+            stepsTaken = Double.parseDouble(steps.getText().toString());
+            dist.setText(numberFormat.format(0.000426136 * stepsTaken) + "Mi");
         }
     }
 
