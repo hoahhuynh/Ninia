@@ -5,20 +5,21 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.os.Bundle;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.ApiException;
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
@@ -29,9 +30,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -49,8 +48,6 @@ import com.google.android.libraries.places.api.net.FetchPlaceResponse;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.mancj.materialsearchbar.adapter.SuggestionsAdapter;
 
@@ -72,12 +69,17 @@ import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import static android.ninia.AppConfig.*;
 
-public class MapActivity extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback {
+public class MapActivity extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback, LocationListener {
 
     String msg;
     private LatLng p1;
@@ -103,6 +105,10 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+        if (!isGooglePlayServicesAvailable()) {
+            Toast.makeText(getApplicationContext(), "GooglePlay is not Available. Please turn it on.", Toast.LENGTH_SHORT).show();
+            return;
+        }
         searchBar = (MaterialSearchBar)findViewById(R.id.searchBar);
         btn_route = (Button)findViewById(R.id.btn_route);
 
@@ -130,14 +136,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                 }
             }
         });
-
-        /*if (!CheckGooglePlayServices()) {
-            Log.i("onCreate", "Finishing test case since Google Play Services are not available");
-            finish();
-        }
-        else {
-            Log.i("onCreate","Google Play Services available.");
-        }*/
 
         SupportMapFragment mapFragment = (SupportMapFragment)getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -279,16 +277,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         map = googleMap;
         map.setMyLocationEnabled(true);
         map.getUiSettings().setMyLocationButtonEnabled(true);
-        /*Intent intent = new Intent();
-        msg = intent.getStringExtra("msg");
-        map.clear();
-        String url = getUrl(latitude, longitude, msg);
-        Object[] DataTransfer = new Object[2];
-        DataTransfer[0] = map;
-        DataTransfer[1] = url;
-        Log.d("onClick", url);
-        GetNearbyPlacesData getNearbyPlacesData = new GetNearbyPlacesData();
-        getNearbyPlacesData.execute(DataTransfer);*/
 
         if(v != null && v.findViewById(Integer.parseInt("1")) != null) {
             View locationButton = ((View) v.findViewById(Integer.parseInt("1")).getParent()).findViewById(Integer.parseInt("2"));
@@ -355,6 +343,7 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()), DEFAULT_ZOOM));
                                 latitude = lastLocation.getLatitude();
                                 longitude = lastLocation.getLongitude();
+                                loadNearByPlaces(latitude,longitude);
 
                                 place1 = new MarkerOptions().position(new LatLng(latitude, longitude)).title("Location 1");
                                 map.addMarker(place1);
@@ -408,88 +397,6 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         currentPolyline = map.addPolyline((PolylineOptions) values[0]);
     }
 
-    /*private boolean CheckGooglePlayServices() {
-        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
-        int result = googleAPI.isGooglePlayServicesAvailable(this);
-        if(result != ConnectionResult.SUCCESS) {
-            if(googleAPI.isUserResolvableError(result)) {
-                googleAPI.getErrorDialog(this, result,
-                        0).show();
-            }
-            return false;
-        }
-        return true;
-    }*/
-
-    /*private String getUrl(double latitude, double longitude, String nearbyPlace) {
-
-        StringBuilder googlePlacesUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlacesUrl.append("location=" + latitude + "," + longitude);
-        googlePlacesUrl.append("&radius=" + PROXIMITY_RADIUS);
-        googlePlacesUrl.append("&type=" + nearbyPlace);
-        googlePlacesUrl.append("&sensor=true");
-        //googlePlacesUrl.append("&key=" + "AIzaSyB0z6ZwZWxlMcg-r1KdZ3NIrqVLnvCrkH0");
-        Log.d("getUrl", googlePlacesUrl.toString());
-        return (googlePlacesUrl.toString());
-    }
-
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d("onLocationChanged", "entered");
-
-        lastLocation = location;
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
-
-        //Place current location marker
-        latitude = location.getLatitude();
-        longitude = location.getLongitude();
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-        mCurrLocationMarker = map.addMarker(markerOptions);
-
-        //move map camera
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        map.animateCamera(CameraUpdateFactory.zoomTo(11));
-        Toast.makeText(MapActivity.this,"Your Current Location", Toast.LENGTH_LONG).show();
-
-        Log.d("onLocationChanged", String.format("latitude:%.3f longitude:%.3f",latitude,longitude));
-
-        //stop location updates
-        if (mGoogleApiClient != null) {
-            LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, (LocationListener) this);
-            Log.d("onLocationChanged", "Removing Location Updates");
-        }
-        Log.d("onLocationChanged", "Exit");
-
-    }
-
-    @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        locationRequest = new LocationRequest();
-        locationRequest.setInterval(1000);
-        locationRequest.setFastestInterval(1000);
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, locationRequest, this);
-        }
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-
-    }
-
-    @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-
-    }*/
     public void getLocationFromAddress(Context context, String strAddress) {
         Geocoder coder = new Geocoder(context);
         List<Address> address;
@@ -508,4 +415,128 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback,
         }
     }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        latitude = location.getLatitude();
+        longitude = location.getLongitude();
+
+        LatLng latLng = new LatLng(latitude, longitude);
+        map.addMarker(new MarkerOptions().position(latLng).title("My Location"));
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        map.animateCamera(CameraUpdateFactory.zoomTo(15));
+
+        loadNearByPlaces(latitude, longitude);
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    private void loadNearByPlaces(double latitude, double longitude) {
+//YOU Can change this type at your own will, e.g hospital, cafe, restaurant.... and see how it all works
+        String type = "park";
+        StringBuilder googlePlacesUrl =
+                new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlacesUrl.append("location=").append(latitude).append(",").append(longitude);
+        googlePlacesUrl.append("&radius=").append(PROXIMITY_RADIUS);
+        googlePlacesUrl.append("&types=").append(type);
+        googlePlacesUrl.append("&sensor=true");
+        googlePlacesUrl.append("&key=" + GOOGLE_BROWSER_API_KEY);
+
+        JsonObjectRequest request = new JsonObjectRequest(googlePlacesUrl.toString(),
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject result) {
+
+                        Log.i(TAG, "onResponse: Result= " + result.toString());
+                        parseLocationResult(result);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "onErrorResponse: Error= " + error);
+                        Log.e(TAG, "onErrorResponse: Error= " + error.getMessage());
+                    }
+                });
+
+        AppController.getInstance().addToRequestQueue(request);
+    }
+
+    private void parseLocationResult(JSONObject result) {
+
+        String id, place_id, placeName = null, reference, icon, vicinity = null;
+        double latitude, longitude;
+
+        try {
+            JSONArray jsonArray = result.getJSONArray("results");
+
+            if (result.getString(STATUS).equalsIgnoreCase(OK)) {
+
+                map.clear();
+
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject place = jsonArray.getJSONObject(i);
+
+                    id = place.getString(SUPERMARKET_ID);
+                    place_id = place.getString(PLACE_ID);
+                    if (!place.isNull(NAME)) {
+                        placeName = place.getString(NAME);
+                    }
+                    if (!place.isNull(VICINITY)) {
+                        vicinity = place.getString(VICINITY);
+                    }
+                    latitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
+                            .getDouble(LATITUDE);
+                    longitude = place.getJSONObject(GEOMETRY).getJSONObject(LOCATION)
+                            .getDouble(LONGITUDE);
+                    reference = place.getString(REFERENCE);
+                    icon = place.getString(ICON);
+
+                    MarkerOptions markerOptions = new MarkerOptions();
+                    LatLng latLng = new LatLng(latitude, longitude);
+                    markerOptions.position(latLng);
+                    markerOptions.title(placeName + " : " + vicinity);
+
+                    map.addMarker(markerOptions);
+                }
+
+                Toast.makeText(getBaseContext(), jsonArray.length() + " Parks found!",
+                        Toast.LENGTH_LONG).show();
+            } else if (result.getString(STATUS).equalsIgnoreCase(ZERO_RESULTS)) {
+                Toast.makeText(getBaseContext(), "No Supermarket found in 5KM radius!!!",
+                        Toast.LENGTH_LONG).show();
+            }
+
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+            Log.e(TAG, "parseLocationResult: Error=" + e.getMessage());
+        }
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (apiAvailability.isUserResolvableError(resultCode)) {
+                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Log.i(TAG, "This device is not supported.");
+                finish();
+            }
+            return false;
+        }
+        return true;
+    }
 }
