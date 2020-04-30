@@ -11,6 +11,9 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class ViewRouteActivity extends AppCompatActivity {
 
     private Button startBtn;
@@ -20,6 +23,8 @@ public class ViewRouteActivity extends AppCompatActivity {
     private TextView distance;
     private TextView duration;
     private TextView steps;
+    private TextView caloriesToBurn;
+    double maxDistance = 0;
     //int numOfSteps;
 
 
@@ -35,15 +40,19 @@ public class ViewRouteActivity extends AppCompatActivity {
         distance = (TextView)findViewById(R.id.viewRouteapproxDistTextView);
         duration = (TextView)findViewById(R.id.viewRouteDurationTextView);
         steps = (TextView)findViewById(R.id.viewRouteapproxStepsTextView);
+        caloriesToBurn = (TextView)findViewById(R.id.approxCalTextView);
+        maxDistance = getDistance();
 
 
         //numOfSteps = (int) (Integer.parseInt(Route.distance.replaceAll("\\D+","")) * 5280 / 2.3);
         //Log.i("Steps",String.valueOf(numOfSteps));
+
         startLocation.setText(Route.startLocation);
         endLocation.setText(Route.endLocation);
         duration.setText(Route.duration);
         distance.setText(Route.distance);
-        steps.setText(Route.steps);
+        caloriesToBurn.setText(String.valueOf((int)(maxDistance * 8.5)));
+        steps.setText(String.format("%.2f",Double.parseDouble(Route.steps)));
 
         startBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,5 +62,18 @@ public class ViewRouteActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    public int getDistance()
+    {
+        String digits = "";
+        Pattern pattern = Pattern.compile("\\d");
+        Matcher matcher = pattern.matcher(Route.distance);
+
+        while(matcher.find())
+        {
+            digits += matcher.group();
+        }
+        return Integer.valueOf(digits);
     }
 }
