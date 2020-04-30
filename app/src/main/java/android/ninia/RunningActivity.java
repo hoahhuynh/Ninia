@@ -21,7 +21,7 @@ public class RunningActivity extends AppCompatActivity {
     TextView caloriesBurned;
     TextView steps;
     TextView distance;
-
+    long timer = 0, extraTimer = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +34,7 @@ public class RunningActivity extends AppCompatActivity {
         caloriesBurned = (TextView)findViewById(R.id.approxCalTextView);
         steps = (TextView)findViewById(R.id.approxStepsTextView);
         distance = (TextView)findViewById(R.id.approxDistTextView);
+        caloriesBurned.setText("0");
 
         chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
         chronometer.start();
@@ -75,11 +76,15 @@ public class RunningActivity extends AppCompatActivity {
             @Override
             public void onChronometerTick(Chronometer chronometer) {
 
-                if(SystemClock.elapsedRealtime() - chronometer.getBase() >= 5000)
+                timer = SystemClock.elapsedRealtime() - chronometer.getBase();
+
+                if(timer - extraTimer >= 3000)
                 {
+
                     caloriesBurned.setText(String.format("%.2f",Double.parseDouble(caloriesBurned.getText().toString())+ 0.06));
-                    steps.setText(String.valueOf(Integer.parseInt(steps.getText().toString()) + 1));
-                    //distance.setText(String.format("%.1f",String.valueOf(Double.parseDouble(distance.getText().toString()) + 0.01)));
+                    steps.setText(String.valueOf((int)Double.parseDouble(steps.getText().toString()) + 2));
+                    distance.setText(String.format("%.2f",Double.parseDouble(distance.getText().toString()) + 0.01));
+                    extraTimer += 3000;
                 }
 
             }

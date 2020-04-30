@@ -3,9 +3,12 @@ package android.ninia;
 //TESTING GITHUB
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.Manifest;
 import android.content.Context;
@@ -27,6 +30,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.navigation.NavigationView;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -44,6 +48,10 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
     Button walkingBtn, hikingBtn, cyclingBtn, weatherBtn;
     Intent intent1;
 
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    androidx.appcompat.widget.Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +66,44 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
 
         intent1 = new Intent(HomeActivity.this, PlotRouteActivity.class);
+
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        navigationView = (NavigationView)findViewById(R.id.navigation);
+        toolbar = (androidx.appcompat.widget.Toolbar)findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        navigationView.bringToFront();
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
+
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch(item.getItemId())
+                {
+                    case R.id.home:
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        break;
+                    case R.id.profile:
+                        Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
+                        startActivity(intent);
+                        break;
+                    case R.id.walk:
+                        startActivity(intent1);
+                        break;
+                    case R.id.bike:
+                        startActivity(intent1);
+                        break;
+                    case R.id.hike:
+                        startActivity(intent1);
+                        break;
+                }
+
+                drawerLayout.closeDrawer(GravityCompat.START);
+                return true;
+            }
+        });
 
         /*if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startActivity(new Intent(HomeActivity.this, HomeActivity.class));
@@ -120,6 +166,7 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
                 startActivity(intent1);
             }
         });
+
     }
 
     @Override
@@ -184,7 +231,7 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
     }
 
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater main_menu = getMenuInflater();
@@ -200,7 +247,7 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
         Intent intent = new Intent(HomeActivity.this, ProfileActivity.class);
         startActivity(intent);
         return true;
-    }
+    }*/
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -214,4 +261,16 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    @Override
+    public void onBackPressed() {
+
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
 }

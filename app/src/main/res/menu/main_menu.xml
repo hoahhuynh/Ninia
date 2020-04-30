@@ -1,4 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:title="Profile" android:id="@+id/profile"></item>
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/home"
+            android:title="Home"
+            android:icon="@drawable/home"/>
+
+        <item
+            android:id="@+id/profile"
+            android:title="Profile"
+            android:icon="@drawable/person"/>
+
+
+    </group>
+
+
+    <item
+        android:title="Activity">
+
+        <menu>
+            <group android:checkableBehavior="single">
+                <item
+                    android:id="@+id/walk"
+                    android:title="Walk"
+                    android:icon="@drawable/walk"/>
+
+                <item
+                    android:id="@+id/bike"
+                    android:title="Bike"
+                    android:icon="@drawable/bike"/>
+
+                <item
+                    android:id="@+id/hike"
+                    android:title="Hike"
+                    android:icon="@drawable/hike"/>
+            </group>
+        </menu>
+    </item>
+
+
 </menu>
