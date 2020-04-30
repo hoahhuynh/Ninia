@@ -140,7 +140,7 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
                     startActivity(intent1);
                 }
                 else {
-                    permissionChecking();
+                    permissionChecking(false);
                 }
             }
         });
@@ -156,7 +156,7 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
                     startActivity(intent1);
                 }
                 else {
-                    permissionChecking();
+                    permissionChecking(false);
                 }
             }
         });
@@ -172,7 +172,7 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
                     startActivity(intent1);
                 }
                 else {
-                    permissionChecking();
+                    permissionChecking(false);
                 }
             }
         });
@@ -180,8 +180,10 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
         weatherBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                intent1 = new Intent(HomeActivity.this,WeatherActivity.class);
-                startActivity(intent1);
+                if(ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+                    startActivity( new Intent(HomeActivity.this, WeatherActivity.class));
+                else
+                    permissionChecking(true);
             }
         });
 
@@ -210,14 +212,20 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
         run = false;
     }
 
-    private void permissionChecking() {
+    private void permissionChecking(final boolean weather) {
         Dexter.withActivity(HomeActivity.this)
                 .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 .withListener(new PermissionListener() {
                     @Override
                     public void onPermissionGranted(PermissionGrantedResponse response) {
-                        startActivity(new Intent(HomeActivity.this, MapActivity.class));
-                        finish();
+                        if(weather) {
+                            startActivity(new Intent(HomeActivity.this, WeatherActivity.class));
+                            finish();
+                        }
+                        else {
+                            startActivity(new Intent(HomeActivity.this, MapActivity.class));
+                            finish();
+                        }
                     }
 
                     @Override
