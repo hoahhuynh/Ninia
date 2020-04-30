@@ -199,6 +199,7 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
         if(count != null)
         {
             sensorManager.registerListener((SensorEventListener) this, count, SensorManager.SENSOR_DELAY_UI);
+            cal.setText(String.format("%.2f",stepsTaken * 0.09));
         }else
         {
             Toast.makeText(this,"Did not find step sensor",Toast.LENGTH_SHORT).show();
