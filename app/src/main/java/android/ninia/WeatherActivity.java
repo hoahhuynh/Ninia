@@ -2,6 +2,7 @@ package android.ninia;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.widget.TextView;
@@ -55,5 +56,12 @@ public class WeatherActivity extends AppCompatActivity {
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(WeatherActivity.this, HomeActivity.class);
+        startActivity(intent);
     }
 }

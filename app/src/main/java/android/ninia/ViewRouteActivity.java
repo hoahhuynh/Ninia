@@ -76,4 +76,11 @@ public class ViewRouteActivity extends AppCompatActivity {
         }
         return Integer.valueOf(digits);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(ViewRouteActivity.this, MapActivity.class);
+        startActivity(intent);
+    }
 }

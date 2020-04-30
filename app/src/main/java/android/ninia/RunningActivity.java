@@ -140,6 +140,13 @@ public class RunningActivity extends AppCompatActivity {
         stop.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(RunningActivity.this, ViewRouteActivity.class);
+        startActivity(intent);
+    }
+
     public int getDistance()
     {
         String digits = "";
@@ -152,5 +159,6 @@ public class RunningActivity extends AppCompatActivity {
         }
         return Integer.valueOf(digits);
     }
+
 }
 
